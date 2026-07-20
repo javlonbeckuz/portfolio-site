@@ -45,17 +45,23 @@
 
   /* ---------- Reveal-on-scroll ---------- */
   var revealEls = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+
+  // Cascade: give each .reveal directly inside a .reveal-group an incremental
+  // index so its transition-delay staggers (see --reveal-i in styles.css),
+  // making cards/items animate in one-by-one instead of all at once.
+  Array.prototype.slice.call(document.querySelectorAll(".reveal-group")).forEach(function (group) {
+    var items = Array.prototype.slice.call(group.querySelectorAll(":scope > .reveal"));
+    items.forEach(function (el, i) { el.style.setProperty("--reveal-i", i); });
+  });
+
   if (reduceMotion || !("IntersectionObserver" in window)) {
     revealEls.forEach(function (el) { el.classList.add("in"); });
   } else {
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry, i) {
+      entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          var el = entry.target;
-          // stagger siblings gently
-          var delay = Math.min(i * 70, 210);
-          setTimeout(function () { el.classList.add("in"); }, delay);
-          io.unobserve(el);
+          entry.target.classList.add("in");   // CSS handles the staggered delay
+          io.unobserve(entry.target);
         }
       });
     }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
