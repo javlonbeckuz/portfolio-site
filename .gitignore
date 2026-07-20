@@ -1,0 +1,19 @@
+# --- Deployment (sensitive: droplet IP, root user, SSH key name) ---
+# Keep server/deploy details out of any public repo.
+deploy/
+.design/
+
+# --- Build/temp artifacts ---
+*.tar.gz
+portfolio_deploy.tar.gz
+
+# --- Secrets / env ---
+.env
+.env.*
+*.pem
+*.key
+
+# --- OS / editor cruft ---
+.DS_Store
+Thumbs.db
+node_modules/
