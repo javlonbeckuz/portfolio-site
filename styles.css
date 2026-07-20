@@ -701,41 +701,79 @@ ul, ol { list-style: none; padding: 0; }
 .footer-legal { font-family: var(--mono); color: var(--text-mute); font-size: .78rem; }
 
 /* =========================================================
-   Reveal-on-scroll
-   Transform + opacity only (GPU-friendly). Fully gated by
-   prefers-reduced-motion (see the reduced-motion block below).
-   Stagger: JS assigns --reveal-i to children of .reveal-group,
-   which offsets transition-delay so items cascade one-by-one.
+   Reveal-on-scroll — TEXT ASSEMBLE (blur-in)
+   Headings materialize per letter / word: each unit settles
+   from blurred + nudged to sharp, staggered so the word
+   "assembles". Body copy & cards share a unified, simpler
+   blur-in fade (blur + opacity only) for a cohesive feel.
+
+   All hidden start-states are gated behind html.js, so with
+   JS disabled the page renders plain, readable text (no reliance
+   on JS to un-hide). Letter-split headings expose their full text
+   via aria-label with the letters aria-hidden; word-split units stay
+   readable (see script.js), so assistive tech + SEO always see real
+   words. Fully neutralised under prefers-reduced-motion (block below).
+
+   Perf: filter: blur() is costlier than transform/opacity, so it
+   is short-lived; letters carry no will-change (avoids promoting
+   ~100 tiny layers), and card boxes drop will-change once settled.
+   Stagger: JS assigns --reveal-i to .reveal-group children and --u
+   to each letter/word unit, offsetting transition-delay.
    ========================================================= */
-.reveal {
+
+/* ---- Unified blur-in fade: cards, body blocks, and the
+        heading-wrapper siblings that aren't split into letters ---- */
+.js .reveal:not(.section-head):not(.hero-copy),
+.js .section-head .section-note,
+.js .hero-copy .hero-sub,
+.js .hero-copy .hero-cta {
   opacity: 0;
-  transform: translateY(26px) scale(.985);
+  filter: blur(8px);
   transition:
     opacity .6s var(--ease),
-    transform .62s var(--ease);
-  transition-delay: calc(var(--reveal-i, 0) * 85ms);
-  will-change: opacity, transform;
+    filter .6s var(--ease);
+  transition-delay: calc(var(--reveal-i, 0) * 70ms);
+  will-change: opacity, filter;
 }
-.reveal.in { opacity: 1; transform: none; }
+.js .reveal.in:not(.section-head):not(.hero-copy),
+.js .section-head.in .section-note,
+.js .hero-copy.in .hero-sub,
+.js .hero-copy.in .hero-cta {
+  opacity: 1;
+  filter: none;
+  will-change: auto;
+}
 
-/* Directional entrance variants — applied for variety, not uniformly.
-   Kept small so nothing overflows (body is overflow-x:hidden anyway). */
-.reveal-up    { transform: translateY(30px) scale(.985); }
-.reveal-left  { transform: translateX(-26px) scale(.99); }
-.reveal-right { transform: translateX(26px)  scale(.99); }
-.reveal-up.in,
-.reveal-left.in,
-.reveal-right.in { transform: none; }
+/* ---- Text assemble: per-letter / per-word units ----
+   Grouped inside an inline .assemble-line wrapper so a flex
+   eyebrow keeps its rule/gap layout (one flex item, not one per word). */
+.js .assemble-line { display: inline; }
+.js .assemble-unit {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(12px);
+  transform: translateY(0.16em);
+  transition:
+    opacity .55s var(--ease),
+    filter .55s var(--ease),
+    transform .55s var(--ease);
+  transition-delay: calc(var(--u, 0) * 30ms);
+}
+.js .reveal.in .assemble-unit {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
 
-/* Subtle polish: the accent eyebrow hairline draws in as a head settles.
+/* Accent eyebrow hairline draws in as the head settles.
    Pure transform (scaleX) — no layout change, no reflow. */
-.reveal .eyebrow-rule {
+.js .reveal .eyebrow-rule {
   transform-origin: left center;
   transform: scaleX(0);
-  transition: transform .55s var(--ease) .12s;
+  transition: transform .55s var(--ease) .1s;
 }
-.reveal .eyebrow-center .eyebrow-rule:last-child { transform-origin: right center; }
-.reveal.in .eyebrow-rule { transform: scaleX(1); }
+.js .reveal .eyebrow-center .eyebrow-rule:last-child { transform-origin: right center; }
+.js .reveal.in .eyebrow-rule { transform: scaleX(1); }
 
 /* =========================================================
    Responsive
@@ -769,7 +807,16 @@ ul, ol { list-style: none; padding: 0; }
     animation-iteration-count: 1 !important;
     transition-duration: .001ms !important;
   }
-  .reveal { opacity: 1; transform: none; }
+  /* Text-assemble + blur-in fully disabled: everything visible & sharp. */
+  .reveal, .reveal.in,
+  .reveal:not(.section-head):not(.hero-copy),
+  .assemble-unit,
+  .section-note, .hero-sub, .hero-cta {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+  .reveal .eyebrow-rule { transform: none !important; }
   .scroll-cue-line::after { display: none; }
   .status-dot { animation: none; }
   .hero-roles.is-typing .hero-roles-text::after { display: none; }

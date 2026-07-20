@@ -18,6 +18,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
+<!-- Mark JS-capable so animation start-states apply only when JS can run them.
+     With no JS this class is never added → all text renders plain and readable. -->
+<script>document.documentElement.classList.add("js");</script>
 <link rel="stylesheet" href="styles.css" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0b0d'/%3E%3Crect x='1.5' y='1.5' width='29' height='29' rx='6' fill='none' stroke='%237c8cff' stroke-opacity='0.5'/%3E%3Ctext x='16' y='22' font-family='monospace' font-weight='700' font-size='16' fill='%237c8cff' text-anchor='middle'%3EJY%3C/text%3E%3C/svg%3E" />
 </head>

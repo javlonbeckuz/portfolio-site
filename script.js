@@ -54,6 +54,104 @@
     items.forEach(function (el, i) { el.style.setProperty("--reveal-i", i); });
   });
 
+  /* ---------- Text-assemble headings (blur-in per letter / word) ----------
+     Split heading text into per-character (short) or per-word (long) spans so
+     each unit can materialize from blurred -> sharp. Accessibility is preserved:
+     we wrap existing text nodes (never remove them), so the real words stay in
+     the DOM for screen readers and SEO. Char-split headings (single words split
+     into letters) get their letters aria-hidden + an aria-label with the full
+     text, so AT reads the word, not the letters; word-split units are whole
+     words and remain read normally. Gradient-clipped words (hero-name accent,
+     contact emphasis) animate as one piece to keep their gradient intact. */
+  (function () {
+    function makeUnit(text) {
+      var s = document.createElement("span");
+      s.className = "assemble-unit";
+      s.textContent = text;
+      return s;
+    }
+
+    // Replace one text node with an inline .assemble-line wrapper containing
+    // per-char / per-word units (and plain whitespace text nodes for spacing).
+    function splitTextNode(parent, node, mode, units) {
+      var text = node.nodeValue;
+      if (!text || !text.trim()) return; // leave pure-whitespace nodes as-is
+      var line = document.createElement("span");
+      line.className = "assemble-line";
+      if (mode === "char") {
+        for (var i = 0; i < text.length; i++) {
+          var ch = text.charAt(i);
+          var code = text.charCodeAt(i);
+          if (code === 32 || code === 160 || /\s/.test(ch)) { // space / nbsp / any ws
+            line.appendChild(document.createTextNode(ch));
+          } else {
+            var u = makeUnit(ch);
+            units.push(u);
+            line.appendChild(u);
+          }
+        }
+      } else {
+        var parts = text.split(/(\s+)/);
+        for (var j = 0; j < parts.length; j++) {
+          var p = parts[j];
+          if (p === "") continue;
+          if (/^\s+$/.test(p)) {
+            line.appendChild(document.createTextNode(p));
+          } else {
+            var w = makeUnit(p);
+            units.push(w);
+            line.appendChild(w);
+          }
+        }
+      }
+      parent.replaceChild(line, node);
+    }
+
+    function walk(node, mode, units) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (child) {
+        if (child.nodeType === 3) {
+          splitTextNode(node, child, mode, units);
+        } else if (child.nodeType === 1) {
+          if (child.tagName === "BR") return;
+          var cl = child.classList;
+          if (cl && cl.contains("eyebrow-rule")) return; // decorative hairline
+          if (cl && (cl.contains("hero-name-accent") || cl.contains("contact-title-em"))) {
+            cl.add("assemble-unit");            // blur the gradient word as one unit
+            units.push(child);
+            return;
+          }
+          walk(child, mode, units);             // recurse into other inline spans
+        }
+      });
+    }
+
+    function assemble(el) {
+      var label = (el.textContent || "").replace(/\s+/g, " ").trim();
+      var mode;
+      if (el.classList.contains("eyebrow")) mode = "word";
+      else if (el.classList.contains("hero-name")) mode = "char";
+      else mode = (label.split(" ").length > 1) ? "word" : "char";
+
+      var units = [];
+      walk(el, mode, units);
+      units.forEach(function (u, i) { u.style.setProperty("--u", i); });
+
+      // A11y: char-mode splits a word into single letters, which a screen
+      // reader would spell out — so hide the letters and expose the full text
+      // via aria-label (reliable on headings). Word-mode units are whole words
+      // and stay readable as-is (no aria-label needed), which also keeps the
+      // generic <p> eyebrow labels accessible.
+      if (mode === "char") {
+        units.forEach(function (u) { u.setAttribute("aria-hidden", "true"); });
+        if (label && !el.hasAttribute("aria-label")) el.setAttribute("aria-label", label);
+      }
+    }
+
+    Array.prototype.slice
+      .call(document.querySelectorAll(".hero-name, .section-title, .eyebrow"))
+      .forEach(assemble);
+  })();
+
   if (reduceMotion || !("IntersectionObserver" in window)) {
     revealEls.forEach(function (el) { el.classList.add("in"); });
   } else {
