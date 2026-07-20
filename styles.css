@@ -701,67 +701,109 @@ ul, ol { list-style: none; padding: 0; }
 .footer-legal { font-family: var(--mono); color: var(--text-mute); font-size: .78rem; }
 
 /* =========================================================
-   Reveal-on-scroll — TEXT ASSEMBLE (blur-in)
-   Headings materialize per letter / word: each unit settles
-   from blurred + nudged to sharp, staggered so the word
-   "assembles". Body copy & cards share a unified, simpler
-   blur-in fade (blur + opacity only) for a cohesive feel.
+   Reveal-on-scroll — TERMINAL DECODE (signature motion)
+   Display headings (.hero-name, .section-title) resolve from
+   scrambled monospace cipher glyphs into their real letters,
+   settling left-to-right like a console decrypting a line. This
+   is the site's reserved signature move. Everything else — eyebrows,
+   body copy, cards, CTAs — shares ONE calm companion motion: a short
+   rise + fade (transform/opacity only, no blur), so the decode stays
+   the standout.
 
-   All hidden start-states are gated behind html.js, so with
-   JS disabled the page renders plain, readable text (no reliance
-   on JS to un-hide). Letter-split headings expose their full text
-   via aria-label with the letters aria-hidden; word-split units stay
-   readable (see script.js), so assistive tech + SEO always see real
-   words. Fully neutralised under prefers-reduced-motion (block below).
+   Accessibility: JS splits headings into per-glyph units that are
+   aria-hidden and sets an aria-label with the full text on the
+   heading, so assistive tech + SEO read real words, never scramble.
+   Gradient words (hero-name-accent, contact-title-em) are never
+   scrambled — they fade in whole so the indigo→cyan stays continuous.
 
-   Perf: filter: blur() is costlier than transform/opacity, so it
-   is short-lived; letters carry no will-change (avoids promoting
-   ~100 tiny layers), and card boxes drop will-change once settled.
-   Stagger: JS assigns --reveal-i to .reveal-group children and --u
-   to each letter/word unit, offsetting transition-delay.
+   No-JS: every hidden start-state is gated behind html.js and the
+   .is-pending hide-state is added by JS, so a script-less load renders
+   plain, sharp, readable text. Fully neutralised under
+   prefers-reduced-motion (block far below).
+
+   Perf: no per-glyph will-change (avoids promoting ~40 tiny layers);
+   glyph widths are locked once at init so scrambling never reflows
+   surrounding text; the rAF decode swaps textContent on a ~45ms
+   throttle and stops the instant a line is fully resolved — no idle
+   timers. Stagger: JS assigns --reveal-i to .reveal-group children.
    ========================================================= */
 
-/* ---- Unified blur-in fade: cards, body blocks, and the
-        heading-wrapper siblings that aren't split into letters ---- */
+/* ---- Companion motion: calm rise + fade (transform/opacity only) ---- */
 .js .reveal:not(.section-head):not(.hero-copy),
+.js .section-head .eyebrow,
 .js .section-head .section-note,
+.js .hero-copy .eyebrow,
 .js .hero-copy .hero-sub,
 .js .hero-copy .hero-cta {
   opacity: 0;
-  filter: blur(8px);
+  transform: translateY(14px);
   transition:
     opacity .6s var(--ease),
-    filter .6s var(--ease);
+    transform .6s var(--ease);
   transition-delay: calc(var(--reveal-i, 0) * 70ms);
-  will-change: opacity, filter;
+  will-change: opacity, transform;
 }
+/* eyebrow leads the head; supporting copy trails the decoding title */
+.js .section-head .section-note,
+.js .hero-copy .hero-sub,
+.js .hero-copy .hero-cta { transition-delay: .16s; }
+
 .js .reveal.in:not(.section-head):not(.hero-copy),
+.js .section-head.in .eyebrow,
 .js .section-head.in .section-note,
+.js .hero-copy.in .eyebrow,
 .js .hero-copy.in .hero-sub,
 .js .hero-copy.in .hero-cta {
   opacity: 1;
-  filter: none;
+  transform: none;
   will-change: auto;
 }
 
-/* ---- Text assemble: per-letter / per-word units ----
-   Grouped inside an inline .assemble-line wrapper so a flex
-   eyebrow keeps its rule/gap layout (one flex item, not one per word). */
-.js .assemble-line { display: inline; }
-.js .assemble-unit {
+/* ---- Terminal decode: per-glyph units on display headings ----
+   Grouped inside an inline .decode-line wrapper so headings keep
+   their normal wrapping/whitespace. */
+.js .decode-line { display: inline; }
+.js .decode-unit {
   display: inline-block;
+  text-align: center;           /* centre cipher glyphs in the locked box */
+}
+/* hidden before the decode sweep reaches this glyph */
+.js .decode-unit.is-pending {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+/* mid-scramble: glowing cyan monospace cipher glyph */
+.js .decode-unit.is-scrambling {
+  font-family: var(--mono);
+  color: var(--cyan);
+  -webkit-text-fill-color: var(--cyan);
+  text-shadow: 0 0 10px rgba(34, 211, 238, .5);
+}
+/* resolved: real glyph, with a brief indigo settle-glow that fades out */
+.js .decode-unit.is-done {
+  color: var(--text);
+  -webkit-text-fill-color: currentColor;
+  animation: decodeSettle .5s var(--ease) both;
+}
+@keyframes decodeSettle {
+  from { text-shadow: 0 0 12px var(--accent-glow); }
+  to   { text-shadow: 0 0 0 rgba(0, 0, 0, 0); }
+}
+
+/* Gradient words never scramble — they fade in whole, just after the
+   decode begins, so the gradient text stays continuous. */
+.js .hero-name-accent,
+.js .contact-title-em {
   opacity: 0;
-  filter: blur(12px);
-  transform: translateY(0.16em);
+  transform: translateY(0.1em);
   transition:
     opacity .55s var(--ease),
-    filter .55s var(--ease),
     transform .55s var(--ease);
-  transition-delay: calc(var(--u, 0) * 30ms);
+  transition-delay: .2s;
 }
-.js .reveal.in .assemble-unit {
+.js .reveal.in .hero-name-accent,
+.js .reveal.in .contact-title-em {
   opacity: 1;
-  filter: none;
   transform: none;
 }
 
@@ -807,14 +849,21 @@ ul, ol { list-style: none; padding: 0; }
     animation-iteration-count: 1 !important;
     transition-duration: .001ms !important;
   }
-  /* Text-assemble + blur-in fully disabled: everything visible & sharp. */
+  /* Terminal decode + companion rise fully disabled: all visible & sharp. */
   .reveal, .reveal.in,
   .reveal:not(.section-head):not(.hero-copy),
-  .assemble-unit,
-  .section-note, .hero-sub, .hero-cta {
+  .eyebrow, .section-note, .hero-sub, .hero-cta,
+  .hero-name-accent, .contact-title-em {
     opacity: 1 !important;
     filter: none !important;
     transform: none !important;
+  }
+  .decode-unit {
+    width: auto !important;
+    color: inherit !important;
+    -webkit-text-fill-color: currentColor !important;
+    text-shadow: none !important;
+    animation: none !important;
   }
   .reveal .eyebrow-rule { transform: none !important; }
   .scroll-cue-line::after { display: none; }
