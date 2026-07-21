@@ -159,16 +159,33 @@
     </fieldset>
 
     <fieldset>
-      <legend>Cover image</legend>
+      <legend>Cover image <span style="text-transform:none">— editorial illustration</span></legend>
+      <div class="field" style="background:var(--panel);border-radius:5px;padding:.75rem .8rem;">
+        <label style="color:var(--ink)">House style — engraving illustration (like aimastava.uz)</label>
+        <p class="help" style="margin-top:.15rem">Vintage <b>engraving / etching</b> look: fine pen-and-ink cross-hatching; a witty conceptual allegory that blends <b>classical / Renaissance</b> scenery (arches, columns, cypress, robed figures) with the article's <b>AI&nbsp;/&nbsp;tech</b> subject. Muted desaturated palette + <b>one</b> bold accent colour. Wide 16:9 crop.</p>
+        <label style="margin-top:.55rem">Generator prompt — fill {TOPIC} &amp; {ACCENT}, paste into any image AI</label>
+        <textarea id="stylePrompt" rows="4" readonly style="font-family:var(--mono);font-size:.72rem;">Editorial conceptual illustration, antique engraving / etching look, fine cross-hatched pen-and-ink linework. A witty allegory about {TOPIC}, blending classical Renaissance architecture (arches, columns, cypress trees, robed figures) with modern AI / tech elements. Muted desaturated palette with a single bold {ACCENT} accent. Wide 16:9 editorial composition, high detail, intelligent and satirical. No text.</textarea>
+        <button type="button" class="add-src" id="copyPrompt" style="margin-top:.4rem">Copy prompt</button>
+      </div>
+      <div class="field">
+        <label>Upload cover</label>
+        <input id="cover_upload" type="file" accept="image/*" />
+        <p class="help">Generate or save the image, then pick it here — it previews instantly. Landscape / wide crops best. (Prefer a real painting instead? Copyright-free: Wikimedia&nbsp;Commons, The&nbsp;Met&nbsp;/&nbsp;Rijksmuseum&nbsp;/&nbsp;Art&nbsp;Institute&nbsp;of&nbsp;Chicago Open&nbsp;Access.)</p>
+      </div>
+      <div class="field">
+        <button type="button" class="add-src" id="dlCover" disabled>↓ Download renamed for assets/blog/</button>
+        <p class="help">Downloads the picked image as <code>&lt;slug&gt;.ext</code>. Drop it into <code>assets/blog/</code> before you deploy.</p>
+      </div>
       <div class="field">
         <label>Filename in <span style="text-transform:none">assets/blog/</span></label>
         <input id="cover_file" placeholder="economics.jpg" />
+        <p class="help">Auto-filled from the upload — or type a filename already in <code>assets/blog/</code>.</p>
       </div>
       <div class="field">
-        <label>Alt text</label><input id="cover_alt" placeholder="Piet Mondrian — Composition II, 1930" />
+        <label>Alt text</label><input id="cover_alt" placeholder="Engraving-style illustration of …" />
       </div>
       <div class="field">
-        <label>Credit line (shown under cover)</label><input id="cover_credit" placeholder="Piet Mondrian · Composition II · 1930" />
+        <label>Credit line (shown under cover)</label><input id="cover_credit" placeholder="Illustration" />
       </div>
     </fieldset>
 
@@ -237,6 +254,10 @@
 (function(){
   "use strict";
   var $ = function(id){ return document.getElementById(id); };
+  function slugify(s){ return String(s).trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); }
+
+  // cover upload state (static site: we can preview + rename, but the user drops the file into assets/blog/)
+  var coverURL = '', coverExt = 'jpg', coverFile = null;
 
   var MONTHS = {
     en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
@@ -345,7 +366,7 @@
   // ---- gather all inputs ----
   function data(){
     var v = function(id){ return $(id).value.trim(); };
-    var slug = v('slug').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'') || 'article';
+    var slug = slugify(v('slug')) || 'article';
     var minutes = v('minutes') || '7';
     return {
       slug: slug, minutes: minutes, iso: v('date'),
@@ -486,7 +507,7 @@
 '  <div class="wrap footer-inner">\n'+
 '    <p class="footer-name">Javlonbek Yokubov</p>\n'+
 '    <p class="footer-tag">AI Engineer · Based in Tashkent</p>\n'+
-'    <p class="footer-legal">© <span id="year">2026</span> · Built with HTML, CSS &amp; a little JavaScript.</p>\n'+
+'    <p class="footer-legal">© <span id="year">2026</span></p>\n'+
 '  </div>\n'+
 '</footer>\n\n'+
 '<script src="../blog.js" defer><\/script>\n'+
@@ -550,6 +571,8 @@
     $('warnArticle').textContent = w.length ? '⚠ '+w.join('  ') : '';
     // preview: rewrite ../ to root-relative so styles/assets resolve from this page's dir
     var pv = lastArticle.replace(/\.\.\//g, '');
+    // if a cover was just uploaded, show it in the preview before it's saved into assets/blog/
+    if(coverURL){ pv = pv.split('assets/blog/'+d.cover.file).join(coverURL); }
     $('preview').srcdoc = pv;
   }
 
@@ -566,11 +589,15 @@
   // ---- actions ----
   function toast(id){ var el=$(id); el.classList.add('show'); setTimeout(function(){el.classList.remove('show');}, 1400); }
   function copy(text, toastId){
-    navigator.clipboard.writeText(text).then(function(){ toast(toastId); }, function(){
+    navigator.clipboard.writeText(text).then(function(){ if(toastId) toast(toastId); }, function(){
       var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
-      try{ document.execCommand('copy'); toast(toastId); }catch(e){} ta.remove();
+      try{ document.execCommand('copy'); if(toastId) toast(toastId); }catch(e){} ta.remove();
     });
   }
+  $('copyPrompt').addEventListener('click', function(){
+    var b = this; copy($('stylePrompt').value);
+    b.textContent = 'Copied ✓'; setTimeout(function(){ b.textContent = 'Copy prompt'; }, 1400);
+  });
   $('copyArticle').addEventListener('click', function(){ copy(lastArticle, 'toastArticle'); });
   $('copyCard').addEventListener('click', function(){ copy(lastCard, 'toastCard'); });
   $('dlArticle').addEventListener('click', function(){
@@ -584,6 +611,28 @@
   Array.prototype.forEach.call(document.querySelectorAll('input, textarea, select'), function(el){
     if(el.closest('.source-row')) return;
     el.addEventListener('input', update);
+  });
+
+  // ---- cover upload ----
+  $('cover_upload').addEventListener('change', function(){
+    var f = this.files && this.files[0];
+    if(!f) return;
+    coverFile = f;
+    if(coverURL) URL.revokeObjectURL(coverURL);
+    coverURL = URL.createObjectURL(f);
+    var m = f.name.match(/\.([a-z0-9]+)$/i);
+    coverExt = m ? m[1].toLowerCase() : (f.type.split('/')[1] || 'jpg');
+    var slug = slugify($('slug').value) || 'cover';
+    $('cover_file').value = slug + '.' + coverExt;   // auto-name to match the slug
+    $('dlCover').disabled = false;
+    update();
+  });
+  $('dlCover').addEventListener('click', function(){
+    if(!coverFile) return;
+    var slug = slugify($('slug').value) || 'cover';
+    var a = document.createElement('a');
+    a.href = coverURL; a.download = slug + '.' + coverExt;
+    document.body.appendChild(a); a.click(); a.remove();
   });
 
   // seed: two source rows + today's date
