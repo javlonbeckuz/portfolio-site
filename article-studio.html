@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Article Studio — Javlonbek Yokubov</title>
+<meta name="robots" content="noindex" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0b0d'/%3E%3Crect x='1.5' y='1.5' width='29' height='29' rx='6' fill='none' stroke='%237c8cff' stroke-opacity='0.5'/%3E%3Ctext x='16' y='22' font-family='monospace' font-weight='700' font-size='16' fill='%237c8cff' text-anchor='middle'%3EJY%3C/text%3E%3C/svg%3E" />
+
+<style>
+  :root{
+    --ink:#0d0d0d; --paper:#ffffff; --wash:#f5f4f2; --panel:#ecebe8;
+    --line:rgba(0,0,0,.14); --line-strong:rgba(0,0,0,.85);
+    --mute:#6a6a6a; --faint:#9a9a9a;
+    --display:'Space Grotesk',sans-serif; --body:'Inter',sans-serif; --mono:'JetBrains Mono',monospace;
+    --ok:#0a7f42; --err:#b3261e;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{font-family:var(--body);color:var(--ink);background:var(--wash);font-size:15px;line-height:1.5;}
+  a{color:var(--ink);}
+
+  /* ---- top bar ---- */
+  .topbar{
+    position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+    padding:.85rem clamp(1rem,3vw,2rem);background:rgba(255,255,255,.9);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line-strong);
+  }
+  .topbar h1{font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:-.01em;margin:0;
+    display:flex;align-items:center;gap:.6rem;}
+  .brand-mark{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:6px;background:var(--ink);color:#fff;font-family:var(--mono);font-weight:700;font-size:.7rem;}
+  .topbar .hint{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--mute);}
+  .topbar .spacer{flex:1;}
+  .btn{
+    font-family:var(--mono);font-size:.72rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+    padding:.55rem .9rem;border:1px solid var(--ink);border-radius:4px;background:transparent;color:var(--ink);
+    cursor:pointer;transition:background .18s,color .18s,transform .18s;white-space:nowrap;
+  }
+  .btn:hover{background:var(--ink);color:#fff;transform:translateY(-1px);}
+  .btn.solid{background:var(--ink);color:#fff;}
+  .btn.solid:hover{background:#000;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+
+  /* ---- layout ---- */
+  .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;height:calc(100% - 58px);}
+  @media (max-width:900px){.grid{grid-template-columns:1fr;height:auto;}}
+  .col{overflow-y:auto;padding:clamp(1rem,2.5vw,1.8rem);}
+  .col.form{border-right:1px solid var(--line-strong);background:var(--paper);}
+  @media (max-width:900px){.col{overflow:visible;}.col.form{border-right:0;border-bottom:1px solid var(--line-strong);}}
+
+  fieldset{border:1px solid var(--line);border-radius:6px;padding:1rem 1.1rem 1.2rem;margin:0 0 1.2rem;}
+  legend{font-family:var(--mono);font-size:.68rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);padding:0 .4rem;}
+  .field{margin-bottom:.85rem;}
+  .field:last-child{margin-bottom:0;}
+  label{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:.3rem;}
+  label .lg{color:var(--ink);font-weight:600;}
+  input,textarea,select{
+    width:100%;font-family:var(--body);font-size:.92rem;color:var(--ink);background:var(--paper);
+    border:1px solid var(--line);border-radius:4px;padding:.5rem .6rem;transition:border-color .18s;
+  }
+  textarea{font-family:var(--body);line-height:1.55;resize:vertical;min-height:76px;}
+  textarea.body-input{min-height:150px;}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--ink);}
+  .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+  @media (max-width:560px){.row3,.row2{grid-template-columns:1fr;}}
+  .help{font-size:.76rem;color:var(--mute);margin:.35rem 0 0;line-height:1.45;}
+  .help code{font-family:var(--mono);background:var(--panel);padding:.05em .35em;border-radius:3px;font-size:.9em;}
+
+  /* sources repeater */
+  .source-row{border:1px dashed var(--line);border-radius:5px;padding:.7rem;margin-bottom:.7rem;position:relative;}
+  .source-row .src-idx{position:absolute;top:.55rem;right:.6rem;font-family:var(--mono);font-size:.66rem;color:var(--faint);}
+  .rm-src{position:absolute;bottom:.55rem;right:.6rem;font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.06em;color:var(--err);background:none;border:0;cursor:pointer;padding:.2rem;}
+  .rm-src:hover{text-decoration:underline;}
+  .add-src{font-family:var(--mono);font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:none;border:1px dashed var(--line-strong);border-radius:4px;padding:.5rem .8rem;cursor:pointer;}
+  .add-src:hover{background:var(--panel);}
+
+  /* ---- output column ---- */
+  .col.out{background:var(--wash);}
+  .tabs{display:flex;gap:.4rem;margin-bottom:.9rem;flex-wrap:wrap;}
+  .tab{font-family:var(--mono);font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.45rem .8rem;border:1px solid var(--line);border-radius:4px;background:var(--paper);cursor:pointer;color:var(--mute);}
+  .tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .out-actions{display:flex;gap:.5rem;margin-bottom:.7rem;flex-wrap:wrap;align-items:center;}
+  .code{width:100%;height:min(60vh,640px);font-family:var(--mono);font-size:.74rem;line-height:1.5;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:.8rem;white-space:pre;overflow:auto;tab-size:2;}
+  .preview-frame{width:100%;height:min(70vh,720px);border:1px solid var(--line-strong);border-radius:6px;background:#fff;}
+  .toast{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ok);opacity:0;transition:opacity .25s;}
+  .toast.show{opacity:1;}
+  .warn{font-family:var(--mono);font-size:.72rem;color:var(--err);margin:.4rem 0 0;min-height:1em;}
+  .filename{font-family:var(--mono);font-size:.72rem;color:var(--mute);margin-left:auto;}
+  .filename b{color:var(--ink);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1><span class="brand-mark">JY</span> Article Studio</h1>
+  <span class="hint">trilingual · zero-build · generates blog HTML</span>
+  <span class="spacer"></span>
+  <a class="btn" href="blog.html">Open blog</a>
+</div>
+
+<div class="grid">
+
+  <!-- ============ FORM ============ -->
+  <div class="col form">
+
+    <fieldset>
+      <legend>Basics</legend>
+      <div class="field">
+        <label><span class="lg">Slug</span> — becomes blog/&lt;slug&gt;.html</label>
+        <input id="slug" placeholder="the-economics-of-agents" />
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Date</label>
+          <input id="date" type="date" />
+        </div>
+        <div class="field">
+          <label>Read time (minutes)</label>
+          <input id="minutes" type="number" min="1" value="7" />
+        </div>
+      </div>
+      <div class="field">
+        <label>Category <span style="text-transform:none">— EN / RU / UZ</span></label>
+        <div class="row3">
+          <input id="cat_en" placeholder="AI & Economics" />
+          <input id="cat_ru" placeholder="ИИ и экономика" />
+          <input id="cat_uz" placeholder="SI va iqtisodiyot" />
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Title &amp; deck</legend>
+      <div class="field">
+        <label>Title — EN</label><input id="title_en" placeholder="The Economics of LLM Agents" />
+      </div>
+      <div class="field">
+        <label>Title — RU</label><input id="title_ru" placeholder="Экономика LLM-агентов" />
+      </div>
+      <div class="field">
+        <label>Title — UZ</label><input id="title_uz" placeholder="LLM-agentlarning iqtisodiyoti" />
+      </div>
+      <div class="field">
+        <label>Deck / subtitle — EN</label><textarea id="deck_en" placeholder="One or two sentences that set up the piece."></textarea>
+      </div>
+      <div class="field">
+        <label>Deck / subtitle — RU</label><textarea id="deck_ru"></textarea>
+      </div>
+      <div class="field">
+        <label>Deck / subtitle — UZ <span style="text-transform:none">(kun.uz register)</span></label><textarea id="deck_uz"></textarea>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Cover image</legend>
+      <div class="field">
+        <label>Filename in <span style="text-transform:none">assets/blog/</span></label>
+        <input id="cover_file" placeholder="economics.jpg" />
+      </div>
+      <div class="field">
+        <label>Alt text</label><input id="cover_alt" placeholder="Piet Mondrian — Composition II, 1930" />
+      </div>
+      <div class="field">
+        <label>Credit line (shown under cover)</label><input id="cover_credit" placeholder="Piet Mondrian · Composition II · 1930" />
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Card excerpt <span style="text-transform:none">(short — for the blog.html grid)</span></legend>
+      <div class="field"><label>EN</label><input id="ex_en" placeholder="From demo to production — and where the economics pushes back." /></div>
+      <div class="field"><label>RU</label><input id="ex_ru" /></div>
+      <div class="field"><label>UZ</label><input id="ex_uz" /></div>
+      <p class="help">Leave blank to reuse the deck.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Body</legend>
+      <p class="help">Light markup, blank line between blocks: <code>## Heading</code> · <code>&gt; quote</code> · <code>- list item</code> · <code>**bold**</code> · <code>*italic*</code> · <code>[1]</code> citation → jumps to source 1.</p>
+      <div class="field"><label>Body — EN</label><textarea id="body_en" class="body-input" placeholder="Opening paragraph...&#10;&#10;## A heading&#10;&#10;Another paragraph with a claim.[1]"></textarea></div>
+      <div class="field"><label>Body — RU</label><textarea id="body_ru" class="body-input"></textarea></div>
+      <div class="field"><label>Body — UZ <span style="text-transform:none">(kun.uz register)</span></label><textarea id="body_uz" class="body-input"></textarea></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Sources <span style="text-transform:none">(shared across languages)</span></legend>
+      <div id="sources"></div>
+      <button type="button" class="add-src" id="addSrc">+ Add source</button>
+      <p class="help">Cite them in the body as <code>[1]</code>, <code>[2]</code> … matching the order here.</p>
+    </fieldset>
+
+  </div>
+
+  <!-- ============ OUTPUT ============ -->
+  <div class="col out">
+    <div class="tabs">
+      <button class="tab active" data-tab="preview">Preview</button>
+      <button class="tab" data-tab="article">Article HTML</button>
+      <button class="tab" data-tab="card">Card for blog.html</button>
+    </div>
+
+    <div class="panel active" data-panel="preview">
+      <p class="help" style="margin-top:0">Live preview (uses the real <code>blog.css</code>). Use the language toggle in the preview header to check UZ/RU/EN.</p>
+      <iframe id="preview" class="preview-frame" title="Article preview"></iframe>
+    </div>
+
+    <div class="panel" data-panel="article">
+      <div class="out-actions">
+        <button class="btn solid" id="dlArticle">Download .html</button>
+        <button class="btn" id="copyArticle">Copy</button>
+        <span class="filename">save as <b id="fnArticle">blog/article.html</b></span>
+        <span class="toast" id="toastArticle">Copied</span>
+      </div>
+      <p class="warn" id="warnArticle"></p>
+      <textarea class="code" id="codeArticle" readonly spellcheck="false"></textarea>
+    </div>
+
+    <div class="panel" data-panel="card">
+      <div class="out-actions">
+        <button class="btn" id="copyCard">Copy snippet</button>
+        <span class="filename">paste into the <b>.post-grid</b> in blog.html</span>
+        <span class="toast" id="toastCard">Copied</span>
+      </div>
+      <textarea class="code" id="codeCard" readonly spellcheck="false"></textarea>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $ = function(id){ return document.getElementById(id); };
+
+  var MONTHS = {
+    en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    ru:['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],
+    uz:['yanvar','fevral','mart','aprel','may','iyun','iyul','avgust','sentyabr','oktyabr','noyabr','dekabr']
+  };
+  var ARIA = { en:'Source', ru:'Источник', uz:'Manba' };
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function fmtDate(iso, lang){
+    if(!iso) return '';
+    var p = iso.split('-'); if(p.length!==3) return '';
+    var y=+p[0], m=+p[1], d=+p[2], mo=MONTHS[lang][m-1];
+    if(!mo) return '';
+    if(lang==='en') return mo+' '+d+', '+y;
+    if(lang==='ru') return d+' '+mo+' '+y;
+    return y+'-yil '+d+'-'+mo;               // uz
+  }
+  function readByline(n, lang){
+    if(lang==='en') return n+' min read';
+    if(lang==='ru') return n+' мин чтения';
+    return n+' daqiqa o‘qish';
+  }
+  function readCard(n, lang){
+    if(lang==='en') return n+' min';
+    if(lang==='ru') return n+' мин';
+    return n+' daqiqa';
+  }
+
+  function inline(s, lang){
+    s = esc(s);
+    s = s.replace(/\[(\d+)\]/g, function(_,n){
+      return '<a class="cite" href="#src-'+n+'" aria-label="'+ARIA[lang]+' '+n+'">'+n+'</a>';
+    });
+    s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    return s;
+  }
+
+  // light markup -> HTML blocks, indented to sit inside <article class="prose">
+  function renderBody(raw, lang){
+    if(!raw || !raw.trim()) return '    <p></p>';
+    var blocks = raw.trim().split(/\n\s*\n/);
+    var out = blocks.map(function(b){
+      var lines = b.split('\n').map(function(l){return l.trim();}).filter(Boolean);
+      if(!lines.length) return '';
+      if(lines.every(function(l){return l.indexOf('- ')===0;})){
+        var items = lines.map(function(l){ return '      <li>'+inline(l.slice(2), lang)+'</li>'; }).join('\n');
+        return '    <ul>\n'+items+'\n    </ul>';
+      }
+      var t = lines.join(' ');
+      if(t.indexOf('## ')===0) return '    <h2>'+inline(t.slice(3), lang)+'</h2>';
+      if(t.indexOf('> ')===0)  return '    <blockquote>'+inline(t.slice(2), lang)+'</blockquote>';
+      return '    <p>'+inline(t, lang)+'</p>';
+    }).filter(Boolean);
+    return out.join('\n\n');
+  }
+
+  // ---- sources ----
+  var sourcesEl = $('sources');
+  function sourceRow(i){
+    var div = document.createElement('div');
+    div.className = 'source-row';
+    div.innerHTML =
+      '<span class="src-idx">['+(i+1)+']</span>'+
+      '<div class="field"><label>Title</label><input class="s-title" placeholder="Author — “Work title.”" /></div>'+
+      '<div class="field"><label>Detail (publisher, year)</label><input class="s-detail" placeholder="Journal / Publisher, 2024." /></div>'+
+      '<div class="field"><label>URL (optional)</label><input class="s-url" placeholder="https://example.com/paper" /></div>'+
+      '<button type="button" class="rm-src">remove</button>';
+    div.querySelector('.rm-src').addEventListener('click', function(){ div.remove(); reindexSources(); update(); });
+    div.querySelectorAll('input').forEach(function(inp){ inp.addEventListener('input', update); });
+    return div;
+  }
+  function reindexSources(){
+    Array.prototype.forEach.call(sourcesEl.children, function(row, i){
+      row.querySelector('.src-idx').textContent = '['+(i+1)+']';
+    });
+  }
+  function addSource(){ sourcesEl.appendChild(sourceRow(sourcesEl.children.length)); }
+  $('addSrc').addEventListener('click', function(){ addSource(); update(); });
+
+  function collectSources(){
+    return Array.prototype.map.call(sourcesEl.children, function(row){
+      return {
+        title:  row.querySelector('.s-title').value.trim(),
+        detail: row.querySelector('.s-detail').value.trim(),
+        url:    row.querySelector('.s-url').value.trim()
+      };
+    }).filter(function(s){ return s.title || s.detail || s.url; });
+  }
+  function renderSources(sources){
+    if(!sources.length){
+      return '      <li id="src-1">\n        <div>\n          <span class="src-title">Add your first source in Article Studio.</span>\n        </div>\n      </li>';
+    }
+    return sources.map(function(s, i){
+      var n = i+1;
+      var link = s.url
+        ? ' <a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.url.replace(/^https?:\/\//,''))+'</a>'
+        : '';
+      var detail = (s.detail || link) ? '\n          <span class="src-detail">'+esc(s.detail)+link+'</span>' : '';
+      return '      <li id="src-'+n+'">\n        <div>\n          <span class="src-title">'+esc(s.title)+'</span>'+detail+'\n        </div>\n      </li>';
+    }).join('\n');
+  }
+
+  // ---- gather all inputs ----
+  function data(){
+    var v = function(id){ return $(id).value.trim(); };
+    var slug = v('slug').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'') || 'article';
+    var minutes = v('minutes') || '7';
+    return {
+      slug: slug, minutes: minutes, iso: v('date'),
+      cat:   { en:v('cat_en'),   ru:v('cat_ru'),   uz:v('cat_uz')   },
+      title: { en:v('title_en'), ru:v('title_ru'), uz:v('title_uz') },
+      deck:  { en:v('deck_en'),  ru:v('deck_ru'),  uz:v('deck_uz')  },
+      ex:    { en:v('ex_en')||v('deck_en'), ru:v('ex_ru')||v('deck_ru'), uz:v('ex_uz')||v('deck_uz') },
+      cover: { file:v('cover_file')||'cover.jpg', alt:v('cover_alt'), credit:v('cover_credit') },
+      body:  { en:v('body_en'),  ru:v('body_ru'),  uz:v('body_uz')  },
+      sources: collectSources()
+    };
+  }
+
+  function tri(map, cls){
+    return '<span data-lang-block="en">'+esc(map.en)+'</span>'+
+           '<span data-lang-block="ru">'+esc(map.ru)+'</span>'+
+           '<span data-lang-block="uz">'+esc(map.uz)+'</span>';
+  }
+
+  // ---- build the full article file ----
+  function buildArticle(d){
+    var subj = encodeURIComponent('Re: '+(d.title.en || 'Article'));
+    var deckSpans =
+      '      <span data-lang-block="en">'+esc(d.deck.en)+'</span>\n'+
+      '      <span data-lang-block="ru">'+esc(d.deck.ru)+'</span>\n'+
+      '      <span data-lang-block="uz">'+esc(d.deck.uz)+'</span>';
+    var titleSpans =
+      '      <span data-lang-block="en">'+esc(d.title.en)+'</span>\n'+
+      '      <span data-lang-block="ru">'+esc(d.title.ru)+'</span>\n'+
+      '      <span data-lang-block="uz">'+esc(d.title.uz)+'</span>';
+    var dateSpan = '<span data-lang-block="en">'+esc(fmtDate(d.iso,'en'))+'</span><span data-lang-block="ru">'+esc(fmtDate(d.iso,'ru'))+'</span><span data-lang-block="uz">'+esc(fmtDate(d.iso,'uz'))+'</span>';
+    var readSpan = '<span data-lang-block="en">'+readByline(d.minutes,'en')+'</span><span data-lang-block="ru">'+readByline(d.minutes,'ru')+'</span><span data-lang-block="uz">'+readByline(d.minutes,'uz')+'</span>';
+    var catSpan  = '<span data-lang-block="en">'+esc(d.cat.en)+'</span><span data-lang-block="ru">'+esc(d.cat.ru)+'</span><span data-lang-block="uz">'+esc(d.cat.uz)+'</span>';
+
+    return '<!DOCTYPE html>\n'+
+'<html lang="en" data-lang="en">\n'+
+'<head>\n'+
+'<meta charset="UTF-8" />\n'+
+'<meta name="viewport" content="width=device-width, initial-scale=1.0" />\n'+
+'<title>'+esc(d.title.en)+' — Javlonbek Yokubov</title>\n'+
+'<meta name="description" content="'+esc(d.deck.en)+'" />\n'+
+'<meta name="author" content="Javlonbek Yokubov" />\n'+
+'<meta name="theme-color" content="#ffffff" />\n\n'+
+'<meta property="og:type" content="article" />\n'+
+'<meta property="og:title" content="'+esc(d.title.en)+'" />\n'+
+'<meta property="og:description" content="'+esc(d.deck.en)+'" />\n\n'+
+'<link rel="preconnect" href="https://fonts.googleapis.com" />\n'+
+'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />\n'+
+'<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />\n\n'+
+'<script>document.documentElement.classList.add("js");<\/script>\n'+
+'<link rel="stylesheet" href="../styles.css" />\n'+
+'<link rel="stylesheet" href="../blog.css" />\n'+
+'<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 32 32\'%3E%3Crect width=\'32\' height=\'32\' rx=\'7\' fill=\'%230a0b0d\'/%3E%3Crect x=\'1.5\' y=\'1.5\' width=\'29\' height=\'29\' rx=\'6\' fill=\'none\' stroke=\'%237c8cff\' stroke-opacity=\'0.5\'/%3E%3Ctext x=\'16\' y=\'22\' font-family=\'monospace\' font-weight=\'700\' font-size=\'16\' fill=\'%237c8cff\' text-anchor=\'middle\'%3EJY%3C/text%3E%3C/svg%3E" />\n'+
+'</head>\n'+
+'<body class="blog-page">\n\n'+
+'<div class="read-progress" aria-hidden="true"></div>\n\n'+
+'<a class="skip-link" href="#main">Skip to content</a>\n\n'+
+'<header class="site-header scrolled" id="siteHeader">\n'+
+'  <div class="wrap header-inner">\n'+
+'    <a href="../index.html" class="brand" aria-label="Javlonbek Yokubov — home">\n'+
+'      <span class="brand-mark" aria-hidden="true">JY</span>\n'+
+'      <span class="brand-name">Javlonbek&nbsp;Yokubov</span>\n'+
+'    </a>\n'+
+'    <nav class="nav" aria-label="Primary">\n'+
+'      <ul>\n'+
+'        <li><a href="../index.html#about">About</a></li>\n'+
+'        <li><a href="../index.html#projects">Projects</a></li>\n'+
+'        <li><a href="../blog.html" class="active">Blog</a></li>\n'+
+'        <li><a href="../index.html#contact">Contact</a></li>\n'+
+'      </ul>\n'+
+'    </nav>\n'+
+'    <div class="lang-toggle" role="group" aria-label="Language">\n'+
+'      <button class="lang-btn" type="button" data-lang="uz" aria-pressed="false" title="O‘zbekcha">UZ</button>\n'+
+'      <button class="lang-btn" type="button" data-lang="ru" aria-pressed="false" title="Русский">RU</button>\n'+
+'      <button class="lang-btn" type="button" data-lang="en" aria-pressed="true" title="English">EN</button>\n'+
+'    </div>\n'+
+'    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">\n'+
+'      <span></span><span></span><span></span>\n'+
+'    </button>\n'+
+'  </div>\n'+
+'  <div class="mobile-nav" id="mobileNav" hidden>\n'+
+'    <nav aria-label="Mobile">\n'+
+'      <ul>\n'+
+'        <li><a href="../index.html">Portfolio</a></li>\n'+
+'        <li><a href="../index.html#about">About</a></li>\n'+
+'        <li><a href="../index.html#projects">Projects</a></li>\n'+
+'        <li><a href="../blog.html">Blog</a></li>\n'+
+'        <li><a href="../index.html#contact">Contact</a></li>\n'+
+'      </ul>\n'+
+'      <a class="btn btn-gold" href="../assets/Javlonbek-Yokubov-CV.pdf" download>Download CV</a>\n'+
+'    </nav>\n'+
+'  </div>\n'+
+'</header>\n\n'+
+'<main id="main" class="article">\n\n'+
+'  <div class="wrap">\n'+
+'    <a class="back-link" href="../blog.html">\n'+
+'      <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H4m4 5L3 8l5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>\n'+
+'      <span><span data-lang-block="en">Back to blog</span><span data-lang-block="ru">Назад к блогу</span><span data-lang-block="uz">Blogga qaytish</span></span>\n'+
+'    </a>\n'+
+'  </div>\n\n'+
+'  <header class="article-header">\n'+
+'    <span class="post-cat">\n      '+catSpan+'\n    </span>\n\n'+
+'    <h1 class="article-title">\n'+titleSpans+'\n    </h1>\n\n'+
+'    <p class="article-deck">\n'+deckSpans+'\n    </p>\n\n'+
+'    <p class="article-byline">\n'+
+'      <span class="author">Javlonbek Yokubov</span>\n'+
+'      <span class="sep" aria-hidden="true">/</span>\n'+
+'      <span>'+dateSpan+'</span>\n'+
+'      <span class="sep" aria-hidden="true">/</span>\n'+
+'      <span>'+readSpan+'</span>\n'+
+'    </p>\n'+
+'  </header>\n\n'+
+'  <div class="article-cover">\n'+
+'    <div class="cover"><img class="cover-img" src="../assets/blog/'+esc(d.cover.file)+'" alt="'+esc(d.cover.alt)+'" /></div>\n'+
+'    <p class="cover-credit">'+esc(d.cover.credit)+'</p>\n'+
+'  </div>\n\n'+
+'  <article class="prose" data-lang-block="en">\n'+renderBody(d.body.en,'en')+'\n  </article>\n\n'+
+'  <article class="prose" data-lang-block="ru">\n'+renderBody(d.body.ru,'ru')+'\n  </article>\n\n'+
+'  <article class="prose" data-lang-block="uz">\n'+renderBody(d.body.uz,'uz')+'\n  </article>\n\n'+
+'  <section class="sources" aria-label="Sources">\n'+
+'    <h2 class="sources-title">\n'+
+'      <span data-lang-block="en">Sources</span><span data-lang-block="ru">Источники</span><span data-lang-block="uz">Manbalar</span>\n'+
+'    </h2>\n'+
+'    <ol class="sources-list">\n'+renderSources(d.sources)+'\n    </ol>\n'+
+'  </section>\n\n'+
+'  <nav class="article-foot" aria-label="Article footer">\n'+
+'    <a class="back-link" href="../blog.html" style="margin:0;">\n'+
+'      <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H4m4 5L3 8l5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>\n'+
+'      <span><span data-lang-block="en">All articles</span><span data-lang-block="ru">Все статьи</span><span data-lang-block="uz">Barcha maqolalar</span></span>\n'+
+'    </a>\n'+
+'    <a class="read-link" href="mailto:javlonbekyoqubov721@gmail.com?subject='+subj+'">\n'+
+'      <span><span data-lang-block="en">Send feedback</span><span data-lang-block="ru">Оставить отзыв</span><span data-lang-block="uz">Fikr bildirish</span></span>\n'+
+'      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>\n'+
+'    </a>\n'+
+'  </nav>\n\n'+
+'</main>\n\n'+
+'<footer class="site-footer">\n'+
+'  <div class="wrap footer-inner">\n'+
+'    <p class="footer-name">Javlonbek Yokubov</p>\n'+
+'    <p class="footer-tag">AI Engineer · Based in Tashkent</p>\n'+
+'    <p class="footer-legal">© <span id="year">2026</span> · Built with HTML, CSS &amp; a little JavaScript.</p>\n'+
+'  </div>\n'+
+'</footer>\n\n'+
+'<script src="../blog.js" defer><\/script>\n'+
+'</body>\n'+
+'</html>\n';
+  }
+
+  // ---- build the blog.html post-card ----
+  function buildCard(d){
+    var catSpan  = '<span data-lang-block="en">'+esc(d.cat.en)+'</span><span data-lang-block="ru">'+esc(d.cat.ru)+'</span><span data-lang-block="uz">'+esc(d.cat.uz)+'</span>';
+    var dateSpan = '<span data-lang-block="en">'+esc(fmtDate(d.iso,'en'))+'</span><span data-lang-block="ru">'+esc(fmtDate(d.iso,'ru'))+'</span><span data-lang-block="uz">'+esc(fmtDate(d.iso,'uz'))+'</span>';
+    var minSpan  = '<span data-lang-block="en">'+readCard(d.minutes,'en')+'</span><span data-lang-block="ru">'+readCard(d.minutes,'ru')+'</span><span data-lang-block="uz">'+readCard(d.minutes,'uz')+'</span>';
+    return '<article class="post-card reveal">\n'+
+'  <div class="cover"><img class="cover-img" src="assets/blog/'+esc(d.cover.file)+'" alt="'+esc(d.cover.alt)+'" loading="lazy" /></div>\n'+
+'  <div class="post-card-body">\n'+
+'    <span class="post-cat">\n      '+catSpan+'\n    </span>\n'+
+'    <h3 class="post-card-title">\n'+
+'      <a class="stretch" href="blog/'+d.slug+'.html">\n'+
+'        <span data-lang-block="en">'+esc(d.title.en)+'</span>\n'+
+'        <span data-lang-block="ru">'+esc(d.title.ru)+'</span>\n'+
+'        <span data-lang-block="uz">'+esc(d.title.uz)+'</span>\n'+
+'      </a>\n'+
+'    </h3>\n'+
+'    <p class="post-card-excerpt">\n'+
+'      <span data-lang-block="en">'+esc(d.ex.en)+'</span>\n'+
+'      <span data-lang-block="ru">'+esc(d.ex.ru)+'</span>\n'+
+'      <span data-lang-block="uz">'+esc(d.ex.uz)+'</span>\n'+
+'    </p>\n'+
+'    <p class="post-meta">\n'+
+'      <span>'+dateSpan+'</span>\n'+
+'      <span class="sep" aria-hidden="true">/</span>\n'+
+'      <span>'+minSpan+'</span>\n'+
+'    </p>\n'+
+'  </div>\n'+
+'</article>';
+  }
+
+  // ---- validation ----
+  function warnings(d){
+    var w = [];
+    if(!d.title.en) w.push('Title (EN) is empty.');
+    ['en','ru','uz'].forEach(function(l){
+      var cites = (d.body[l].match(/\[(\d+)\]/g)||[]).map(function(m){return +m.replace(/\D/g,'');});
+      var max = Math.max.apply(null, cites.concat([0]));
+      if(max > d.sources.length) w.push('Body ('+l.toUpperCase()+') cites ['+max+'] but only '+d.sources.length+' source(s) exist.');
+    });
+    return w;
+  }
+
+  // ---- render everything ----
+  var lastArticle = '', lastCard = '', lastSlug = 'article';
+  function update(){
+    var d = data();
+    lastSlug = d.slug;
+    lastArticle = buildArticle(d);
+    lastCard = buildCard(d);
+    $('codeArticle').value = lastArticle;
+    $('codeCard').value = lastCard;
+    $('fnArticle').textContent = 'blog/'+d.slug+'.html';
+    var w = warnings(d);
+    $('warnArticle').textContent = w.length ? '⚠ '+w.join('  ') : '';
+    // preview: rewrite ../ to root-relative so styles/assets resolve from this page's dir
+    var pv = lastArticle.replace(/\.\.\//g, '');
+    $('preview').srcdoc = pv;
+  }
+
+  // ---- tabs ----
+  Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(t){
+    t.addEventListener('click', function(){
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
+      document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('active');});
+      t.classList.add('active');
+      document.querySelector('.panel[data-panel="'+t.dataset.tab+'"]').classList.add('active');
+    });
+  });
+
+  // ---- actions ----
+  function toast(id){ var el=$(id); el.classList.add('show'); setTimeout(function(){el.classList.remove('show');}, 1400); }
+  function copy(text, toastId){
+    navigator.clipboard.writeText(text).then(function(){ toast(toastId); }, function(){
+      var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); toast(toastId); }catch(e){} ta.remove();
+    });
+  }
+  $('copyArticle').addEventListener('click', function(){ copy(lastArticle, 'toastArticle'); });
+  $('copyCard').addEventListener('click', function(){ copy(lastCard, 'toastCard'); });
+  $('dlArticle').addEventListener('click', function(){
+    var blob = new Blob([lastArticle], {type:'text/html'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = lastSlug+'.html';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+  });
+
+  // ---- wire inputs ----
+  Array.prototype.forEach.call(document.querySelectorAll('input, textarea, select'), function(el){
+    if(el.closest('.source-row')) return;
+    el.addEventListener('input', update);
+  });
+
+  // seed: two source rows + today's date
+  addSource(); addSource();
+  var now = new Date();
+  $('date').value = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  update();
+})();
+</script>
+</body>
+</html>

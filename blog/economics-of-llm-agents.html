@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Economics of LLM Agents — Javlonbek Yokubov</title>
+<meta name="description" content="Autonomous AI agents are moving from demo to production. What does that shift change about the cost of knowledge work — and where does the economics push back? In Uzbek, Russian and English, with cited sources." />
+<meta name="author" content="Javlonbek Yokubov" />
+<meta name="theme-color" content="#ffffff" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="The Economics of LLM Agents" />
+<meta property="og:description" content="From demo to production — and where the economics of knowledge work pushes back." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="../blog.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0b0d'/%3E%3Crect x='1.5' y='1.5' width='29' height='29' rx='6' fill='none' stroke='%237c8cff' stroke-opacity='0.5'/%3E%3Ctext x='16' y='22' font-family='monospace' font-weight='700' font-size='16' fill='%237c8cff' text-anchor='middle'%3EJY%3C/text%3E%3C/svg%3E" />
+</head>
+<body class="blog-page">
+
+<div class="read-progress" aria-hidden="true"></div>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ================= HEADER / NAV ================= -->
+<header class="site-header scrolled" id="siteHeader">
+  <div class="wrap header-inner">
+    <a href="../index.html" class="brand" aria-label="Javlonbek Yokubov — home">
+      <span class="brand-mark" aria-hidden="true">JY</span>
+      <span class="brand-name">Javlonbek&nbsp;Yokubov</span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../blog.html" class="active">Blog</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button class="lang-btn" type="button" data-lang="uz" aria-pressed="false" title="O‘zbekcha">UZ</button>
+      <button class="lang-btn" type="button" data-lang="ru" aria-pressed="false" title="Русский">RU</button>
+      <button class="lang-btn" type="button" data-lang="en" aria-pressed="true" title="English">EN</button>
+    </div>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-nav" id="mobileNav" hidden>
+    <nav aria-label="Mobile">
+      <ul>
+        <li><a href="../index.html">Portfolio</a></li>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../blog.html">Blog</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+      <a class="btn btn-gold" href="../assets/Javlonbek-Yokubov-CV.pdf" download>Download CV</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="article">
+
+  <div class="wrap">
+    <a class="back-link" href="../blog.html">
+      <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H4m4 5L3 8l5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span><span data-lang-block="en">Back to blog</span><span data-lang-block="ru">Назад к блогу</span><span data-lang-block="uz">Blogga qaytish</span></span>
+    </a>
+  </div>
+
+  <!-- ================= ARTICLE HEADER ================= -->
+  <header class="article-header">
+    <span class="post-cat">
+      <span data-lang-block="en">AI &amp; Economics</span><span data-lang-block="ru">ИИ и экономика</span><span data-lang-block="uz">SI va iqtisodiyot</span>
+    </span>
+
+    <h1 class="article-title">
+      <span data-lang-block="en">The Economics of LLM Agents</span>
+      <span data-lang-block="ru">Экономика LLM-агентов</span>
+      <span data-lang-block="uz">LLM-agentlarning iqtisodiyoti</span>
+    </h1>
+
+    <p class="article-deck">
+      <span data-lang-block="en">Autonomous agents are the first AI systems that don’t just answer — they act. That changes the unit economics of knowledge work in ways worth thinking through carefully.</span>
+      <span data-lang-block="ru">Автономные агенты — первые системы ИИ, которые не просто отвечают, а действуют. Это меняет юнит-экономику умственного труда, и об этом стоит подумать внимательно.</span>
+      <span data-lang-block="uz">Avtonom agentlar — shunchaki javob bermay, harakat qiladigan birinchi SI tizimlari. Bu aqliy mehnatning birlik iqtisodiyotini o‘zgartiradi va bu haqda diqqat bilan o‘ylash kerak.</span>
+    </p>
+
+    <p class="article-byline">
+      <span class="author">Javlonbek Yokubov</span>
+      <span class="sep" aria-hidden="true">/</span>
+      <span><span data-lang-block="en">Jul 18, 2026</span><span data-lang-block="ru">18 июля 2026</span><span data-lang-block="uz">2026-yil 18-iyul</span></span>
+      <span class="sep" aria-hidden="true">/</span>
+      <span><span data-lang-block="en">9 min read</span><span data-lang-block="ru">9 мин чтения</span><span data-lang-block="uz">9 daqiqa o‘qish</span></span>
+    </p>
+  </header>
+
+  <div class="article-cover">
+    <div class="cover"><img class="cover-img" src="../assets/blog/economics.jpg" alt="Piet Mondrian — Composition II in Red, Blue and Yellow, 1930" /></div>
+    <p class="cover-credit">Piet Mondrian · Composition II in Red, Blue and Yellow · 1930</p>
+  </div>
+
+  <!-- ================= PROSE (EN) ================= -->
+  <article class="prose" data-lang-block="en">
+    <p>For two years the story of large language models was about better answers. You asked, the model responded, and you decided what to do next. Agents break that pattern. An agent is given a goal, then chooses its own steps — calling tools, reading results, and looping until the goal is met.<a class="cite" href="#src-1" aria-label="Source 1">1</a> The interesting question is no longer <em>can the model write the email?</em> but <em>what is the cost of a system that decides, on its own, which emails to write?</em></p>
+
+    <h2>From tool to worker</h2>
+    <p>The technical shift is small; the economic shift is large. Most production agents are still built from a simple loop: the model reasons about what to do, takes an action, observes the result, and reasons again — the pattern popularised as ReAct.<a class="cite" href="#src-2" aria-label="Source 2">2</a> Give that loop access to real tools — a database, a search API, a code runtime — and the model stops being a text box and starts being a <strong>process</strong>. Open standards like the Model Context Protocol now let one agent connect to many tools through a single interface, which is what makes this cheap enough to deploy widely.<a class="cite" href="#src-3" aria-label="Source 3">3</a></p>
+
+    <h2>What actually gets cheaper</h2>
+    <p>Economists have a clean way to think about this: automation lowers the <em>marginal</em> cost of a task while leaving the fixed cost of judgement in place. Early field evidence is striking. In the first large-scale workplace study of generative AI, customer-support agents using an AI assistant resolved 14% more issues per hour on average — and novice workers improved by 34%, while the most experienced barely moved.<a class="cite" href="#src-4" aria-label="Source 4">4</a> The gain is concentrated exactly where the cost of inexperience used to be highest.</p>
+
+    <blockquote>The value of an agent is not that it thinks like an expert. It is that it makes a novice’s output look like an expert’s — at the marginal cost of a few API calls.</blockquote>
+
+    <h2>Where the economics pushes back</h2>
+    <p>None of this is free. An agent that acts can act wrongly, and the cost of a wrong action is higher than the cost of a wrong sentence. Three forces resist the naive “agents will do everything” story:</p>
+    <ul>
+      <li><strong>Verification cost.</strong> If a human must check every step, you have not automated the task — you have moved the human from doing to reviewing, and review does not always cost less.</li>
+      <li><strong>The reliability tax.</strong> A loop that is 95% reliable per step is only about 60% reliable over ten steps. Long chains compound error, so real deployments stay short and heavily guarded.</li>
+      <li><strong>Judgement stays scarce.</strong> Deciding <em>what</em> is worth doing, and being accountable for it, is still human work — and it is exactly the part markets pay the most for.</li>
+    </ul>
+
+    <h2>What this means for builders here</h2>
+    <p>For a developer in Tashkent, the takeaway is practical, not speculative. The cheapest edge today is not training models; it is wiring existing ones into well-scoped agents that do one narrow job reliably. The economics rewards narrowness: a short, verifiable loop around a real workflow beats an ambitious agent that dazzles in a demo and fails in production. Build the boring, reliable one.</p>
+    <p>The frontier is not a smarter model. It is a clearer answer to an old economic question — which tasks are worth automating, and who is accountable when the machine decides.</p>
+  </article>
+
+  <!-- ================= PROSE (RU) ================= -->
+  <article class="prose" data-lang-block="ru">
+    <p>Два года вся история больших языковых моделей была про лучшие ответы. Вы спрашивали — модель отвечала — вы решали, что делать дальше. Агенты ломают этот шаблон. Агенту задают цель, и он сам выбирает шаги: вызывает инструменты, читает результаты и повторяет цикл, пока цель не достигнута.<a class="cite" href="#src-1" aria-label="Источник 1">1</a> Интересный вопрос теперь не <em>«может ли модель написать письмо?»</em>, а <em>«сколько стоит система, которая сама решает, какие письма писать?»</em></p>
+
+    <h2>От инструмента к работнику</h2>
+    <p>Технический сдвиг мал, экономический — велик. Большинство продакшен-агентов по-прежнему построены на простом цикле: модель рассуждает, что делать, совершает действие, наблюдает результат и рассуждает снова — паттерн, ставший известным как ReAct.<a class="cite" href="#src-2" aria-label="Источник 2">2</a> Дайте этому циклу доступ к реальным инструментам — базе данных, поисковому API, среде выполнения кода — и модель перестаёт быть текстовым полем и становится <strong>процессом</strong>. Открытые стандарты вроде Model Context Protocol позволяют одному агенту подключаться ко многим инструментам через единый интерфейс — именно это делает подход достаточно дешёвым для массового внедрения.<a class="cite" href="#src-3" aria-label="Источник 3">3</a></p>
+
+    <h2>Что действительно дешевеет</h2>
+    <p>У экономистов есть ясный способ об этом думать: автоматизация снижает <em>предельную</em> стоимость задачи, оставляя фиксированную стоимость суждения на месте. Ранние полевые данные впечатляют. В первом масштабном исследовании генеративного ИИ на рабочем месте операторы поддержки с ИИ-ассистентом решали в среднем на 14% больше обращений в час, а новички — на 34% больше, тогда как у самых опытных почти ничего не изменилось.<a class="cite" href="#src-4" aria-label="Источник 4">4</a> Выигрыш сосредоточен ровно там, где цена неопытности прежде была самой высокой.</p>
+
+    <blockquote>Ценность агента не в том, что он думает как эксперт. А в том, что он делает результат новичка похожим на работу эксперта — по предельной цене нескольких вызовов API.</blockquote>
+
+    <h2>Где экономика сопротивляется</h2>
+    <p>Всё это не бесплатно. Агент, который действует, может действовать неверно, а цена неверного действия выше цены неверного предложения. Три силы сопротивляются наивной истории «агенты сделают всё»:</p>
+    <ul>
+      <li><strong>Стоимость проверки.</strong> Если человек должен проверять каждый шаг, вы не автоматизировали задачу — вы лишь перевели человека из исполнителя в проверяющего, а проверка не всегда дешевле.</li>
+      <li><strong>Налог на надёжность.</strong> Цикл с надёжностью 95% на шаг надёжен лишь примерно на 60% на десяти шагах. Длинные цепочки накапливают ошибку, поэтому реальные внедрения остаются короткими и хорошо защищёнными.</li>
+      <li><strong>Суждение остаётся дефицитом.</strong> Решать, <em>что</em> стоит делать, и отвечать за это — по-прежнему работа человека, и именно за неё рынок платит больше всего.</li>
+    </ul>
+
+    <h2>Что это значит для разработчиков здесь</h2>
+    <p>Для разработчика в Ташкенте вывод практический, а не умозрительный. Самое дешёвое преимущество сегодня — не обучать модели, а встраивать существующие в узко очерченных агентов, которые надёжно делают одну конкретную работу. Экономика вознаграждает узость: короткий проверяемый цикл вокруг реального процесса лучше амбициозного агента, который впечатляет в демо и падает в продакшене. Стройте скучного, но надёжного.</p>
+    <p>Граница — не более умная модель. Это более ясный ответ на старый экономический вопрос: какие задачи стоит автоматизировать и кто отвечает, когда решает машина.</p>
+  </article>
+
+  <!-- ================= PROSE (UZ) ================= -->
+  <article class="prose" data-lang-block="uz">
+    <p>So‘nggi ikki yil davomida katta til modellari (LLM) atrofidagi asosiy e’tibor javoblar sifatiga qaratildi: foydalanuvchi so‘rov yuborar, model javob qaytarar, keyingi qadamni esa foydalanuvchining o‘zi belgilar edi. Agentlar bu tartibni o‘zgartiradi. Agentga maqsad beriladi, u esa qadamlarni mustaqil tanlaydi: vositalarni chaqiradi, natijalarni o‘qiydi va maqsadga erishguncha siklni takrorlaydi.<a class="cite" href="#src-1" aria-label="Manba 1">1</a> Shu bois asosiy savol <em>«model xat yoza oladimi?»</em> emas, <em>«qaysi xatlarni yozishni o‘zi hal qiladigan tizim qancha xarajat talab qiladi?»</em> tarzida qo‘yiladi.</p>
+
+    <h2>Vositadan xodimga</h2>
+    <p>Texnik o‘zgarish kichik, iqtisodiy oqibati esa katta. Ishlab chiqarishdagi aksariyat agentlar hanuz oddiy siklga asoslanadi: model nima qilishni mulohaza qiladi, harakatni bajaradi, natijani kuzatadi va yana mulohaza qiladi — bu usul ReAct nomi bilan tanilgan.<a class="cite" href="#src-2" aria-label="Manba 2">2</a> Ushbu siklga haqiqiy vositalar — ma’lumotlar bazasi, qidiruv API’si, kod ijro etish muhiti — ulansa, model matn maydoni bo‘lishdan to‘xtab, <strong>jarayonga</strong> aylanadi. Model Context Protocol singari ochiq standartlar bitta agentni yagona interfeys orqali ko‘plab vositalarga ulash imkonini beradi; aynan shu narsa texnologiyani keng joriy etish uchun yetarlicha arzonlashtiradi.<a class="cite" href="#src-3" aria-label="Manba 3">3</a></p>
+
+    <h2>Aslida nima arzonlashadi</h2>
+    <p>Iqtisodchilar buni aniq tavsiflaydi: avtomatlashtirish vazifaning <em>marjinal</em> xarajatini pasaytiradi, hukm chiqarishning qat’iy xarajatini esa joyida qoldiradi. Dastlabki dala tadqiqotlari natijalari sezilarli. Generativ sun’iy intellekt bo‘yicha ish joyida o‘tkazilgan birinchi keng ko‘lamli tadqiqotga ko‘ra, sun’iy intellekt yordamchisidan foydalangan qo‘llab-quvvatlash operatorlari soatiga o‘rtacha 14 foiz ko‘proq murojaatni hal qilgan; yangi xodimlarda bu ko‘rsatkich 34 foizga oshgan, eng tajribali xodimlarda esa deyarli o‘zgarmagan.<a class="cite" href="#src-4" aria-label="Manba 4">4</a> Ya’ni samara aynan tajribasizlik xarajati ilgari eng yuqori bo‘lgan joyda to‘plangan.</p>
+
+    <blockquote>Agentning qiymati uning ekspertdek fikrlashida emas. Uning qiymati yangi xodim natijasini bir necha API chaqiruvi xarajati evaziga ekspert darajasiga yaqinlashtirishida.</blockquote>
+
+    <h2>Iqtisodiyot qayerda qarshilik ko‘rsatadi</h2>
+    <p>Bularning hech biri bepul emas. Harakat qiladigan agent xato harakat qilishi mumkin, xato harakatning narxi esa xato jumlaning narxidan yuqori. «Agentlar hamma ishni bajaradi» degan soddalashtirilgan qarashga uch omil qarshilik ko‘rsatadi:</p>
+    <ul>
+      <li><strong>Tekshirish xarajati.</strong> Agar inson har bir qadamni tekshirishi zarur bo‘lsa, vazifa avtomatlashtirilmagan bo‘ladi — inson ijrochidan tekshiruvchiga o‘tkaziladi, tekshirish esa har doim ham arzonroq emas.</li>
+      <li><strong>Ishonchlilik solig‘i.</strong> Har qadamda 95 foiz ishonchli sikl o‘n qadamdan so‘ng atigi 60 foizga yaqin ishonchli bo‘ladi. Uzun zanjirlar xatoni to‘playdi, shu sababli amaldagi tizimlar qisqa va qat’iy nazorat ostida saqlanadi.</li>
+      <li><strong>Hukm tanqis bo‘lib qoladi.</strong> Nimani bajarishga arziydi va buning uchun kim javobgar — bu hamon inson zimmasidagi ish, bozor esa eng ko‘p aynan shunga haq to‘laydi.</li>
+    </ul>
+
+    <h2>Bu mahalliy quruvchilar uchun nimani anglatadi</h2>
+    <p>Toshkentdagi dasturchi uchun xulosa amaliy, faraziy emas. Bugungi eng arzon ustunlik modellarni o‘qitishda emas, mavjud modellarni bitta tor vazifani ishonchli bajaradigan, aniq belgilangan agentlarga ulashda. Iqtisodiyot torlikni rag‘batlantiradi: haqiqiy jarayon atrofidagi qisqa va tekshiriladigan sikl namoyishda hayratlantirsa-da, ishlab chiqarishda qulaydigan ulkan agentdan afzalroq. Zerikarli, biroq ishonchlisini qurish maqsadga muvofiq.</p>
+    <p>Chegara — aqlliroq model emas. Bu — eski iqtisodiy savolga aniqroq javob: qaysi vazifalarni avtomatlashtirishga arziydi va qaror mashina tomonidan qabul qilinganda kim javobgar bo‘ladi.</p>
+  </article>
+
+  <!-- ================= SOURCES (shared across languages) ================= -->
+  <section class="sources" aria-label="Sources">
+    <h2 class="sources-title">
+      <span data-lang-block="en">Sources</span><span data-lang-block="ru">Источники</span><span data-lang-block="uz">Manbalar</span>
+    </h2>
+    <ol class="sources-list">
+      <li id="src-1">
+        <div>
+          <span class="src-title">Anthropic — “Building Effective AI Agents.”</span>
+          <span class="src-detail">Anthropic Research, 2024. <a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">anthropic.com/research/building-effective-agents</a></span>
+        </div>
+      </li>
+      <li id="src-2">
+        <div>
+          <span class="src-title">Yao, S. et al. — “ReAct: Synergizing Reasoning and Acting in Language Models.”</span>
+          <span class="src-detail">arXiv:2210.03629, 2022. <a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">arxiv.org/abs/2210.03629</a></span>
+        </div>
+      </li>
+      <li id="src-3">
+        <div>
+          <span class="src-title">Anthropic — “Introducing the Model Context Protocol.”</span>
+          <span class="src-detail">Anthropic News, 2024. <a href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener">anthropic.com/news/model-context-protocol</a></span>
+        </div>
+      </li>
+      <li id="src-4">
+        <div>
+          <span class="src-title">Brynjolfsson, E., Li, D. &amp; Raymond, L. — “Generative AI at Work.”</span>
+          <span class="src-detail">NBER Working Paper 31161, 2023 (later Quarterly Journal of Economics, 2025). <a href="https://www.nber.org/papers/w31161" target="_blank" rel="noopener">nber.org/papers/w31161</a></span>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ================= ARTICLE FOOT ================= -->
+  <nav class="article-foot" aria-label="Article footer">
+    <a class="back-link" href="../blog.html" style="margin:0;">
+      <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 8H4m4 5L3 8l5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span><span data-lang-block="en">All articles</span><span data-lang-block="ru">Все статьи</span><span data-lang-block="uz">Barcha maqolalar</span></span>
+    </a>
+    <a class="read-link" href="mailto:javlonbekyoqubov721@gmail.com?subject=Re:%20The%20Economics%20of%20LLM%20Agents">
+      <span><span data-lang-block="en">Send feedback</span><span data-lang-block="ru">Оставить отзыв</span><span data-lang-block="uz">Fikr bildirish</span></span>
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </nav>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p class="footer-name">Javlonbek Yokubov</p>
+    <p class="footer-tag">AI Engineer · Based in Tashkent</p>
+    <p class="footer-legal">© <span id="year">2026</span> · Built with HTML, CSS &amp; a little JavaScript.</p>
+  </div>
+</footer>
+
+<script src="../blog.js" defer></script>
+</body>
+</html>

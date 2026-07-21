@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Blog — Javlonbek Yokubov</title>
+<meta name="description" content="Essays and field notes by Javlonbek Yokubov on LLMs, autonomous agents and the economics of work — in Uzbek, Russian and English, with sources for every claim." />
+<meta name="author" content="Javlonbek Yokubov" />
+<meta name="theme-color" content="#ffffff" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Blog — Javlonbek Yokubov" />
+<meta property="og:description" content="Essays on LLMs, AI agents and the economics of work — in Uzbek, Russian and English, with cited sources." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<script>document.documentElement.classList.add("js");</script>
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="blog.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0b0d'/%3E%3Crect x='1.5' y='1.5' width='29' height='29' rx='6' fill='none' stroke='%237c8cff' stroke-opacity='0.5'/%3E%3Ctext x='16' y='22' font-family='monospace' font-weight='700' font-size='16' fill='%237c8cff' text-anchor='middle'%3EJY%3C/text%3E%3C/svg%3E" />
+</head>
+<body class="blog-page">
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- ================= HEADER / NAV ================= -->
+<header class="site-header scrolled" id="siteHeader">
+  <div class="wrap header-inner">
+    <a href="index.html" class="brand" aria-label="Javlonbek Yokubov — home">
+      <span class="brand-mark" aria-hidden="true">JY</span>
+      <span class="brand-name">Javlonbek&nbsp;Yokubov</span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <ul>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#projects">Projects</a></li>
+        <li><a href="blog.html" class="active" aria-current="page">Blog</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button class="lang-btn" type="button" data-lang="uz" aria-pressed="false" title="O‘zbekcha">UZ</button>
+      <button class="lang-btn" type="button" data-lang="ru" aria-pressed="false" title="Русский">RU</button>
+      <button class="lang-btn" type="button" data-lang="en" aria-pressed="true" title="English">EN</button>
+    </div>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <!-- mobile nav drawer -->
+  <div class="mobile-nav" id="mobileNav" hidden>
+    <nav aria-label="Mobile">
+      <ul>
+        <li><a href="index.html">Portfolio</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#projects">Projects</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+      <a class="btn btn-gold" href="assets/Javlonbek-Yokubov-CV.pdf" download>Download CV</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="blog-main">
+
+  <!-- ================= INTRO ================= -->
+  <section class="blog-intro">
+    <div class="wrap">
+      <p class="eyebrow reveal"><span class="eyebrow-rule" aria-hidden="true"></span>Blog</p>
+      <h1 class="blog-intro-title reveal">
+        <span data-lang-block="en">AI, Agents<br />&amp; Economics</span>
+        <span data-lang-block="ru">ИИ, Агенты<br />и Экономика</span>
+        <span data-lang-block="uz">SI, Agentlar<br />&amp; Iqtisodiyot</span>
+      </h1>
+      <p class="blog-intro-lead reveal">
+        <span data-lang-block="en">Essays and field notes on large language models, autonomous agents, and what they mean for the economics of work.</span>
+        <span data-lang-block="ru">Эссе и заметки о больших языковых моделях, автономных агентах и о том, что они значат для экономики труда.</span>
+        <span data-lang-block="uz">Katta til modellari, avtonom agentlar va ularning mehnat iqtisodiyotiga ta’siri haqida esse va kuzatuvlar.</span>
+      </p>
+      <p class="blog-intro-sub reveal">
+        <span data-lang-block="en">Written in Uzbek, Russian and English — with sources for every claim.</span>
+        <span data-lang-block="ru">На узбекском, русском и английском — со ссылками на источники по каждому тезису.</span>
+        <span data-lang-block="uz">O‘zbek, rus va ingliz tillarida — har bir da’vo uchun manbalar bilan.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= FEATURED ================= -->
+  <section class="featured">
+    <div class="wrap">
+      <p class="eyebrow reveal"><span class="eyebrow-rule" aria-hidden="true"></span>
+        <span data-lang-block="en">Featured</span><span data-lang-block="ru">Избранное</span><span data-lang-block="uz">Tanlangan</span>
+      </p>
+
+      <article class="featured-card reveal">
+        <a class="cover" href="blog/economics-of-llm-agents.html" aria-hidden="true" tabindex="-1">
+          <img class="cover-img" src="assets/blog/economics.jpg" alt="Piet Mondrian — Composition II in Red, Blue and Yellow, 1930" loading="lazy" />
+        </a>
+        <div class="featured-body">
+          <span class="post-cat">
+            <span data-lang-block="en">AI &amp; Economics</span><span data-lang-block="ru">ИИ и экономика</span><span data-lang-block="uz">SI va iqtisodiyot</span>
+          </span>
+          <h2 class="featured-title">
+            <a href="blog/economics-of-llm-agents.html">
+              <span data-lang-block="en">The Economics of LLM Agents</span>
+              <span data-lang-block="ru">Экономика LLM-агентов</span>
+              <span data-lang-block="uz">LLM-agentlarning iqtisodiyoti</span>
+            </a>
+          </h2>
+          <p class="featured-excerpt">
+            <span data-lang-block="en">Autonomous AI agents are moving from demo to production. What does that shift actually change about the cost of knowledge work — and where does the economics push back?</span>
+            <span data-lang-block="ru">Автономные ИИ-агенты переходят от демо к продакшену. Что этот сдвиг реально меняет в стоимости умственного труда — и где экономика сопротивляется?</span>
+            <span data-lang-block="uz">Avtonom SI-agentlar namoyishdan ishlab chiqarishga o‘tmoqda. Bu o‘zgarish aqliy mehnat narxida aslida nimani o‘zgartiradi — va iqtisodiyot qayerda qarshilik qiladi?</span>
+          </p>
+          <p class="post-meta">
+            <span class="author">Javlonbek Yokubov</span>
+            <span class="sep" aria-hidden="true">/</span>
+            <span><span data-lang-block="en">Jul 18, 2026</span><span data-lang-block="ru">18 июля 2026</span><span data-lang-block="uz">2026-yil 18-iyul</span></span>
+            <span class="sep" aria-hidden="true">/</span>
+            <span><span data-lang-block="en">9 min read</span><span data-lang-block="ru">9 мин чтения</span><span data-lang-block="uz">9 daqiqa o‘qish</span></span>
+          </p>
+          <a class="read-link" href="blog/economics-of-llm-agents.html">
+            <span><span data-lang-block="en">Read article</span><span data-lang-block="ru">Читать статью</span><span data-lang-block="uz">Maqolani o‘qish</span></span>
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= MORE WRITING GRID ================= -->
+  <section class="grid-section section-ink" id="all">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2 class="section-title">
+          <span data-lang-block="en">More writing</span><span data-lang-block="ru">Другие материалы</span><span data-lang-block="uz">Boshqa yozuvlar</span>
+        </h2>
+      </div>
+
+      <div class="post-grid reveal-group">
+
+        <!-- Published: the sample article (repeated as a grid entry) -->
+        <article class="post-card reveal">
+          <div class="cover"><img class="cover-img" src="assets/blog/economics.jpg" alt="Piet Mondrian — Composition II in Red, Blue and Yellow, 1930" loading="lazy" /></div>
+          <div class="post-card-body">
+            <span class="post-cat">
+              <span data-lang-block="en">AI &amp; Economics</span><span data-lang-block="ru">ИИ и экономика</span><span data-lang-block="uz">SI va iqtisodiyot</span>
+            </span>
+            <h3 class="post-card-title">
+              <a class="stretch" href="blog/economics-of-llm-agents.html">
+                <span data-lang-block="en">The Economics of LLM Agents</span>
+                <span data-lang-block="ru">Экономика LLM-агентов</span>
+                <span data-lang-block="uz">LLM-agentlarning iqtisodiyoti</span>
+              </a>
+            </h3>
+            <p class="post-card-excerpt">
+              <span data-lang-block="en">From demo to production — and where the economics pushes back.</span>
+              <span data-lang-block="ru">От демо к продакшену — и где экономика сопротивляется.</span>
+              <span data-lang-block="uz">Namoyishdan ishlab chiqarishga — va iqtisodiyot qayerda qarshilik qiladi.</span>
+            </p>
+            <p class="post-meta">
+              <span><span data-lang-block="en">Jul 18, 2026</span><span data-lang-block="ru">18 июля 2026</span><span data-lang-block="uz">2026-yil 18-iyul</span></span>
+              <span class="sep" aria-hidden="true">/</span>
+              <span><span data-lang-block="en">9 min</span><span data-lang-block="ru">9 мин</span><span data-lang-block="uz">9 daqiqa</span></span>
+            </p>
+          </div>
+        </article>
+
+        <!-- Draft slot A -->
+        <article class="post-card is-draft reveal" aria-disabled="true">
+          <div class="cover"><img class="cover-img" src="assets/blog/prompt.jpg" alt="Book of Kells — illuminated incipit page, c. 800" loading="lazy" /></div>
+          <div class="post-card-body">
+            <span class="post-cat">
+              <span data-lang-block="en">AI Engineering</span><span data-lang-block="ru">ИИ-инженерия</span><span data-lang-block="uz">SI-injiniring</span>
+            </span>
+            <h3 class="post-card-title">
+              <span data-lang-block="en">Prompt engineering is just interface design</span>
+              <span data-lang-block="ru">Промпт-инжиниринг — это проектирование интерфейса</span>
+              <span data-lang-block="uz">Prompt-injiniring — bu interfeys dizayni</span>
+            </h3>
+            <p class="post-card-excerpt">
+              <span data-lang-block="en">Treating the prompt as a contract between human intent and model behaviour.</span>
+              <span data-lang-block="ru">Промпт как контракт между намерением человека и поведением модели.</span>
+              <span data-lang-block="uz">Prompt — inson niyati va model xatti-harakati o‘rtasidagi shartnoma sifatida.</span>
+            </p>
+            <span class="draft-tag">
+              <span data-lang-block="en">Coming soon</span><span data-lang-block="ru">Скоро</span><span data-lang-block="uz">Tez orada</span>
+            </span>
+          </div>
+        </article>
+
+        <!-- Published: startup gap in Uzbekistan -->
+        <article class="post-card reveal">
+          <div class="cover"><img class="cover-img" src="assets/blog/uzbekistan.jpg" alt="Vasily Vereshchagin — The Doors of Timur (Tamerlane), 1872" loading="lazy" /></div>
+          <div class="post-card-body">
+            <span class="post-cat">
+              <span data-lang-block="en">Economics</span><span data-lang-block="ru">Экономика</span><span data-lang-block="uz">Iqtisodiyot</span>
+            </span>
+            <h3 class="post-card-title">
+              <a class="stretch" href="blog/startup-gap-uzbekistan.html">
+                <span data-lang-block="en">Institutional voids and the startup gap in Uzbekistan</span>
+                <span data-lang-block="ru">Институциональные пустоты и стартап-разрыв в Узбекистане</span>
+                <span data-lang-block="uz">Institutsional bo‘shliqlar va O‘zbekistondagi startap tafovuti</span>
+              </a>
+            </h3>
+            <p class="post-card-excerpt">
+              <span data-lang-block="en">What a 310-founder survey says about scaling where institutions are thin.</span>
+              <span data-lang-block="ru">Что опрос 310 основателей говорит о масштабировании там, где институты слабы.</span>
+              <span data-lang-block="uz">310 asoschi so‘rovi institutlar zaif joyda masshtablash haqida nima deydi.</span>
+            </p>
+            <p class="post-meta">
+              <span><span data-lang-block="en">Jul 11, 2026</span><span data-lang-block="ru">11 июля 2026</span><span data-lang-block="uz">2026-yil 11-iyul</span></span>
+              <span class="sep" aria-hidden="true">/</span>
+              <span><span data-lang-block="en">7 min</span><span data-lang-block="ru">7 мин</span><span data-lang-block="uz">7 daqiqa</span></span>
+            </p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="blog-cta">
+    <div class="wrap">
+      <div class="blog-cta-inner reveal">
+        <h2 class="blog-cta-title">
+          <span data-lang-block="en">Get new essays by email.</span>
+          <span data-lang-block="ru">Получайте новые эссе на почту.</span>
+          <span data-lang-block="uz">Yangi esselarni pochta orqali oling.</span>
+        </h2>
+        <p class="blog-cta-note">
+          <span data-lang-block="en">No newsletter platform yet — just email me and I’ll add you to the list.</span>
+          <span data-lang-block="ru">Пока без платформы рассылки — просто напишите мне, и я добавлю вас в список.</span>
+          <span data-lang-block="uz">Hozircha axborotnoma platformasi yo‘q — menga yozing, sizni ro‘yxatga qo‘shaman.</span>
+        </p>
+        <a class="btn btn-gold btn-lg" href="mailto:javlonbekyoqubov721@gmail.com?subject=Subscribe%20to%20the%20blog">
+          <span><span data-lang-block="en">Email me</span><span data-lang-block="ru">Написать мне</span><span data-lang-block="uz">Menga yozing</span></span>
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p class="footer-name">Javlonbek Yokubov</p>
+    <p class="footer-tag">AI Engineer · Based in Tashkent</p>
+    <p class="footer-legal">© <span id="year">2026</span> · Built with HTML, CSS &amp; a little JavaScript.</p>
+  </div>
+</footer>
+
+<script src="blog.js" defer></script>
+</body>
+</html>
